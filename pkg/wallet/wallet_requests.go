@@ -1,0 +1,27 @@
+package wallet
+
+import (
+	types "wallet/pkg/types"
+)
+
+type CreateWalletRequest struct {
+	// Unique identifier for the wallet owner.
+	OwnerID string `binding:"required" form:"owner_id" json:"owner_id" url:"owner_id"`
+	// Currency of the wallet.
+	Currency types.Currency `binding:"required, currencyEnum" form:"currency" json:"currency" url:"currency"`
+	// Status of the wallet.
+	Status types.WalletStatus `binding:"required, walletStatusEnum" form:"status" json:"status" url:"status"`
+}
+
+type ListWalletsRequest struct {
+	// IDs of the wallets to filter.
+	IDs []string `binding:"omitempty" form:"ids,omitempty" json:"ids,omitempty" url:"ids,omitempty"`
+	// Owner IDs to filter.
+	OwnerIDs []string `binding:"omitempty" form:"owner_ids,omitempty" json:"owner_ids,omitempty" url:"owner_ids,omitempty"`
+	// Currencies to filter.
+	Currencies []types.Currency `binding:"omitempty, currencyEnum" form:"currencies,omitempty" json:"currencies,omitempty" url:"currencies,omitempty"`
+}
+
+type UpdateWalletStatusRequest struct {
+	Status types.WalletStatus `binding:"required, walletStatusEnum" form:"status" json:"status" url:"status"`
+}
