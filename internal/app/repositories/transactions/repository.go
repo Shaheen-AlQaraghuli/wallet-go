@@ -3,11 +3,11 @@ package transactions
 import (
 	"context"
 
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/models"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/repositories"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/dblib"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/pagination"
 	"gorm.io/gorm"
-	"wallet/internal/app/models"
-	"wallet/internal/app/repositories"
-	"wallet/internal/util/dblib"
-	"wallet/internal/util/pagination"
 )
 
 type Repository struct {

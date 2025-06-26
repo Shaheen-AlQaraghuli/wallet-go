@@ -3,7 +3,7 @@ package wallet
 import (
 	"time"
 
-	"wallet/pkg/types"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/pkg/types"
 )
 
 type Transaction struct {

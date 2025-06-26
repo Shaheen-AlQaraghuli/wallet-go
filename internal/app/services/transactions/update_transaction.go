@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/models"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/pkg/types"
 	"github.com/looplab/fsm"
 	"go.uber.org/zap"
-	"wallet/internal/app/models"
-	"wallet/pkg/types"
 )
 
 func (s *Service) UpdateTransactionStatus(ctx context.Context, id string, status string) (models.Transaction, error) {

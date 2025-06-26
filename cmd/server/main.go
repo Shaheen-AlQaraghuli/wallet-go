@@ -10,13 +10,13 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Shaheen-AlQaraghuli/wallet-go/config"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/cache"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/pkg/types"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"wallet/config"
-	"wallet/internal/app/cache"
-	"wallet/pkg/types"
 )
 
 // @contact.name Wallet Service Owners.

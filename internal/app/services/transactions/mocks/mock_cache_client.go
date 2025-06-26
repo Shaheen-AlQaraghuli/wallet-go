@@ -4,7 +4,7 @@ package mocks
 
 import (
 	context "context"
-	models "wallet/internal/app/models"
+	models "github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/models"
 
 	mock "github.com/stretchr/testify/mock"
 )

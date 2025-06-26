@@ -3,15 +3,15 @@ package main
 import (
 	"time"
 
+	cacher "github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/cache"
+	transactionCtrl "github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/controller/transactions"
+	walletCtrl "github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/controller/wallets"
+	transactionsRepo "github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/repositories/transactions"
+	walletRepo "github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/repositories/wallets"
+	transactionSvc "github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/services/transactions"
+	walletSvc "github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/services/wallets"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	cacher "wallet/internal/app/cache"
-	transactionCtrl "wallet/internal/app/controller/transactions"
-	walletCtrl "wallet/internal/app/controller/wallets"
-	transactionsRepo "wallet/internal/app/repositories/transactions"
-	walletRepo "wallet/internal/app/repositories/wallets"
-	transactionSvc "wallet/internal/app/services/transactions"
-	walletSvc "wallet/internal/app/services/wallets"
 )
 
 func addWalletRoutes(db *gorm.DB, cache *cacher.Cache, routerGroup *gin.RouterGroup) {

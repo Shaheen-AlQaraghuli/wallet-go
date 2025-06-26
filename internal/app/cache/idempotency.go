@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/models"
 	"github.com/redis/go-redis/v9"
-	"wallet/internal/app/models"
 )
 
 const (

@@ -1,4 +1,4 @@
-module wallet
+module github.com/Shaheen-AlQaraghuli/wallet-go
 
 go 1.24.0
 

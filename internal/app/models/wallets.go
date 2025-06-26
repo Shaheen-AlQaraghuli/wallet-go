@@ -3,10 +3,10 @@ package models
 import (
 	"time"
 
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/pagination"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/pkg/types"
+	pkg "github.com/Shaheen-AlQaraghuli/wallet-go/pkg/wallet"
 	"gorm.io/gorm"
-	"wallet/internal/util/pagination"
-	"wallet/pkg/types"
-	pkg "wallet/pkg/wallet"
 )
 
 type Wallets []Wallet
