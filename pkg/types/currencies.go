@@ -17,10 +17,11 @@ func (c Currency) String() string {
 }
 
 func (c Currencies) String() []string {
-	strs := make([]string, len(c))
-	for i, currency := range c {
-		strs[i] = currency.String()
+	strs := make([]string, 0, len(c))
+	for _, currency := range c {
+		strs = append(strs, currency.String())
 	}
+
 	return strs
 }
 

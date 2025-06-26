@@ -33,22 +33,22 @@ func loadConfig() {
 
 	cfg = &AppConfig{}
 
-	// App
+	// App.
 	cfg.App.Name = viper.GetString("APP_NAME")
 	cfg.App.Debug = viper.GetBool("APP_DEBUG")
 	cfg.App.Port = viper.GetUint16("APP_PORT")
 
-	// Database
+	// Database.
 	cfg.Database.DSN = viper.GetString("DATABASE_DSN")
 
-	// Redis
+	// Redis.
 	cfg.Redis.URL = viper.GetString("REDIS_URL")
 }
 
 func readEnvVariables() {
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
-	viper.AddConfigPath("./..")
+	viper.AddConfigPath(".")
 	viper.AutomaticEnv()
 
 	_ = viper.ReadInConfig()

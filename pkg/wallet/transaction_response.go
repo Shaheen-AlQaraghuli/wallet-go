@@ -1,8 +1,9 @@
 package wallet
 
 import (
-	"wallet/pkg/types"
 	"time"
+
+	"wallet/pkg/types"
 )
 
 type Transaction struct {
@@ -12,8 +13,8 @@ type Transaction struct {
 	Note      *string                 `json:"note,omitempty"`
 	Type      types.TransactionType   `json:"type"`
 	Status    types.TransactionStatus `json:"status"`
-	CreatedAt time.Time                  `json:"created_at"`
-	UpdatedAt time.Time                  `json:"updated_at"`
+	CreatedAt time.Time               `json:"created_at"`
+	UpdatedAt time.Time               `json:"updated_at"`
 }
 
 type TransactionResponse struct {

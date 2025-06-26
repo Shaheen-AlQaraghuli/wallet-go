@@ -1,13 +1,13 @@
 package json
 
 import (
-	"wallet/internal/util/http/apierror"
 	"github.com/gin-gonic/gin"
+	"wallet/internal/util/http/apierror"
 )
 
 func SendApiValidationError(c *gin.Context, err error) {
 	validationError := apierror.NewValidatorError(c, err)
- 	c.JSON(validationError.HttpCode, validationError)
+	c.JSON(validationError.HttpCode, validationError)
 }
 
 func SendGenericAPIError(c *gin.Context, err error) {
@@ -16,6 +16,6 @@ func SendGenericAPIError(c *gin.Context, err error) {
 }
 
 func SendBadRequestError(c *gin.Context, message string) {
- badRequestError := apierror.NewBadRequestError(message)
- c.JSON(badRequestError.HttpCode, badRequestError)
+	badRequestError := apierror.NewBadRequestError(message)
+	c.JSON(badRequestError.HttpCode, badRequestError)
 }

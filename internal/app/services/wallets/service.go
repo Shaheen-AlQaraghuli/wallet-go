@@ -60,7 +60,10 @@ func (s *Service) UpdateWalletStatus(ctx context.Context, id, status string) (mo
 	return s.db.Update(ctx, wallet)
 }
 
-func (s *Service) ListWallets(ctx context.Context, query models.QueryWallets) (models.Wallets, *pagination.Pagination, error) {
+func (s *Service) ListWallets(ctx context.Context, query models.QueryWallets) (
+	models.Wallets,
+	*pagination.Pagination, error,
+) {
 	return s.db.List(ctx, query)
 }
 

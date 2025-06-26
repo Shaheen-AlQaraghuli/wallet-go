@@ -37,8 +37,8 @@ func Paginate(paginator pagination.Paginator) func(db *gorm.DB) *gorm.DB {
 }
 
 func GetPaginator(paginator pagination.Paginator) pagination.Paginator {
-	page := DefaultPageSize
-	perPage := MaxPerPage
+	page := 1
+	perPage := DefaultPageSize
 
 	if paginator.Page == nil || *paginator.Page < 1 {
 		paginator.Page = &page

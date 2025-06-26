@@ -11,25 +11,25 @@ type ErrorMessage string
 
 const (
 	ErrorMessageValidation ErrorMessage = "validation error"
-	ErrorMessageInternal ErrorMessage = "something went wrong"
+	ErrorMessageInternal   ErrorMessage = "something went wrong"
 )
 
 func (code ErrorMessage) String() string {
 	return string(code)
 }
 
-// ValidationError represents a validation error for a specific field
+// ValidationError represents a validation error for a specific field.
 type ValidationError struct {
 	Source     string `json:"source"`
 	Message    string `json:"message"`
 	fieldError validator.FieldError
 }
 
-// Error represents a standardized error structure
+// Error represents a standardized error structure.
 type Error struct {
-	HttpCode         int                `json:"-"`
-	Message          string             `json:"message,omitempty"`
-	Errors []ValidationError  `json:"errors,omitempty"`
+	HttpCode int               `json:"-"`
+	Message  string            `json:"message,omitempty"`
+	Errors   []ValidationError `json:"errors,omitempty"`
 }
 
 func (e Error) Error() string {
@@ -42,5 +42,3 @@ func (e Error) Error() string {
 
 	return sb.String()
 }
-
-

@@ -57,7 +57,8 @@ func (cl *Client) CreateTransaction(ctx context.Context, req CreateTransactionRe
 	return transaction, nil
 }
 
-func (cl *Client) UpdateTransactionStatus(ctx context.Context, id string, req UpdateTransactionStatusRequest) (TransactionResponse, error) {
+func (cl *Client) UpdateTransactionStatus(ctx context.Context, id string, req UpdateTransactionStatusRequest) (
+	TransactionResponse, error) {
 	var transaction TransactionResponse
 
 	url := cl.buildUrl(fmt.Sprintf("/transactions/%s/status", id), nil)

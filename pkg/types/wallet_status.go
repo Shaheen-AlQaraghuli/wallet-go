@@ -8,10 +8,9 @@ const (
 	WalletStatusFrozen   WalletStatus = "frozen"
 )
 
-func (w WalletStatus) String() string{
+func (w WalletStatus) String() string {
 	return string(w)
 }
-
 
 func GetWalletStatuses() []WalletStatus {
 	return []WalletStatus{

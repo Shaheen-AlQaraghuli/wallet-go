@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	idempotencyKeyPrefix = "idempotency:"
+	idempotencyKeyPrefix = "idempotency"
 	idempotencyTTL       = 24 * time.Hour
 )
 
@@ -22,6 +22,7 @@ func (c *Cache) GetIdempotentTransaction(ctx context.Context, idempotencyKey str
 	val, err := c.client.Get(ctx, key).Result()
 	if err != nil {
 		if errors.Is(err, redis.Nil) {
+			//nolint:nilnil
 			return nil, nil
 		}
 
@@ -36,7 +37,11 @@ func (c *Cache) GetIdempotentTransaction(ctx context.Context, idempotencyKey str
 	return &transaction, nil
 }
 
-func (c *Cache) SetIdempotentTransaction(ctx context.Context, idempotencyKey string, transaction models.Transaction) error {
+func (c *Cache) SetIdempotentTransaction(
+	ctx context.Context,
+	idempotencyKey string,
+	transaction models.Transaction,
+) error {
 	key := c.makeKey(idempotencyKeyPrefix, idempotencyKey)
 
 	data, err := json.Marshal(transaction)

@@ -45,7 +45,8 @@ func (r *Repository) Update(ctx context.Context, wallet models.Wallet) (models.W
 	return wallet, nil
 }
 
-func (r *Repository) List(ctx context.Context, query models.QueryWallets) ([]models.Wallet, *pagination.Pagination, error) {
+func (r *Repository) List(ctx context.Context, query models.QueryWallets) (
+	[]models.Wallet, *pagination.Pagination, error) {
 	var wallets []models.Wallet
 
 	queryBuilder := r.DB(ctx).Model(&models.Wallet{})
