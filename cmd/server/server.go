@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"context"
@@ -19,8 +19,8 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-// @contact.name Wallet Service Owners.
-func main() {
+
+func StartServer() {
 	cfg := config.Config()
 
 	if err := types.RegisterValidations(); err != nil {

@@ -31,7 +31,7 @@ lint: install-linter
 	@"$(BIN_DIR)/golint/$(GOLANGCI_LINT_VERSION)/golangci-lint" run --fix
 
 run:
-	go run ./cmd/server/.
+	go run ./cmd/.
 
 db-up:
 	docker-compose up postgres -d
@@ -55,7 +55,7 @@ doc-gen:
 	# Remove all temp files that might be there because of a previously failed doc-gen.
 	@rm -rf ./docs/tmp
 	# Generate OpenAPI v2 doc from swaggo/swag annotations.
-	@$(BIN_DIR)/swag init -g ./cmd/server/main.go -o ./docs/tmp --parseDependency --parseInternal --quiet --collectionFormat multi
+	@$(BIN_DIR)/swag init -g ./cmd/main.go -o ./docs/tmp --parseDependency --parseInternal --quiet --collectionFormat multi
 	# Convert the generated OpenAPI v2 yaml file to OpenAPI v3 yaml file.
 	@docker run --rm -u $(shell id -u):$(shell id -g) -v $(PWD)/docs/tmp:/work openapitools/openapi-generator-cli:latest-release \
         generate -i /work/swagger.yaml -o /work/v3 -g openapi-yaml --minimal-update 1> /dev/null

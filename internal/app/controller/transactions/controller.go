@@ -7,7 +7,7 @@ import (
 	_ "github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/http/apierror"
 	jsonlib "github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/http/errors/json"
 	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/pagination"
-	pkg "github.com/Shaheen-AlQaraghuli/wallet-go/pkg/wallet"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/pkg/wallet"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,7 +30,21 @@ func New(transactionSvc transactionService) *Controller {
 	}
 }
 
-// @Router       /transactions/{id} [get].
+// GetTransactionByID godoc
+//
+// @Summary      Get transaction by ID
+// @Description  Get transaction by ID
+// @ID getTransactionByID
+// @Tags         transactions
+// @Accept       json
+// @Produce      json
+// @Param        id   path      string  true  "Transaction ID"
+// @Success      200  {object}  wallet.TransactionResponse
+// @Failure      400  {object}  apierror.Error
+// @Failure      404  {object}  apierror.Error
+// @Failure      422  {object}  apierror.Error
+// @Failure      500  {object}  apierror.Error
+// @Router       /transactions/{id} [get]
 func (c *Controller) GetTransactionByID(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {
@@ -46,12 +60,27 @@ func (c *Controller) GetTransactionByID(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(200, pkg.TransactionResponse{
+	ctx.JSON(200, wallet.TransactionResponse{
 		Transaction: transaction.ToResponse(),
 	})
 }
 
-// @Router       /transactions/{id}/status [put].
+// UpdateTransactionStatus godoc
+//
+// @Summary      Update transaction status
+// @Description  Update the status of a transaction
+// @ID updateTransactionStatus
+// @Tags         transactions
+// @Accept       json
+// @Produce      json
+// @Param        id     path      string  true  "Transaction ID"
+// @Param        status body      string  true  "New status for the transaction"
+// @Success      200    {object}  wallet.TransactionResponse
+// @Failure      400    {object}  apierror.Error
+// @Failure      404    {object}  apierror.Error
+// @Failure      422    {object}  apierror.Error
+// @Failure      500    {object}  apierror.Error
+// @Router       /transactions/{id}/status [put]
 func (c *Controller) UpdateTransactionStatus(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {
@@ -60,7 +89,7 @@ func (c *Controller) UpdateTransactionStatus(ctx *gin.Context) {
 		return
 	}
 
-	var req pkg.UpdateTransactionStatusRequest
+	var req wallet.UpdateTransactionStatusRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		jsonlib.SendApiValidationError(ctx, err)
 
@@ -74,14 +103,28 @@ func (c *Controller) UpdateTransactionStatus(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(200, pkg.TransactionResponse{
+	ctx.JSON(200, wallet.TransactionResponse{
 		Transaction: transaction.ToResponse(),
 	})
 }
 
-// @Router       /transactions [get].
+// ListTransactions godoc
+//
+// @Summary      List transactions
+// @Description  List transactions with pagination
+// @ID listTransactions
+// @Tags         transactions
+// @Accept       json
+// @Produce      json
+// @Param        query  query      wallet.ListTransactionsRequest  true  "Query parameters"
+// @Success      200    {object}  wallet.TransactionsResponse
+// @Failure      400    {object}  apierror.Error
+// @Failure      404    {object}  apierror.Error
+// @Failure      422    {object}  apierror.Error
+// @Failure      500    {object}  apierror.Error
+// @Router       /transactions [get]
 func (c *Controller) ListTransactions(ctx *gin.Context) {
-	var req pkg.ListTransactionsRequest
+	var req wallet.ListTransactionsRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {
 		jsonlib.SendApiValidationError(ctx, err)
 
@@ -95,17 +138,32 @@ func (c *Controller) ListTransactions(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(200, pkg.TransactionsResponse{
+	ctx.JSON(200, wallet.TransactionsResponse{
 		Transactions: transactions.ToResponse(),
-		Metadata: pkg.Metadata{
+		Metadata: wallet.Metadata{
 			Pagination: *pagination,
 		},
 	})
 }
 
-// @Router       /transactions [post].
+
+// CreateTransaction godoc
+//
+// @Summary      Create transaction
+// @Description  Create a new transaction
+// @ID createTransaction
+// @Tags         transactions
+// @Accept       json
+// @Produce      json
+// @Param        transaction  body      wallet.CreateTransactionRequest  true  "Transaction data"
+// @Success      201    {object}  wallet.TransactionResponse
+// @Failure      400    {object}  apierror.Error
+// @Failure      404    {object}  apierror.Error
+// @Failure      422    {object}  apierror.Error
+// @Failure      500    {object}  apierror.Error
+// @Router       /transactions [post]
 func (c *Controller) CreateTransaction(ctx *gin.Context) {
-	var req pkg.CreateTransactionRequest
+	var req wallet.CreateTransactionRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		jsonlib.SendApiValidationError(ctx, err)
 
@@ -119,7 +177,7 @@ func (c *Controller) CreateTransaction(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(201, pkg.TransactionResponse{
+	ctx.JSON(201, wallet.TransactionResponse{
 		Transaction: transaction.ToResponse(),
 	})
 }

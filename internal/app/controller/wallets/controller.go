@@ -7,7 +7,7 @@ import (
 	_ "github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/http/apierror"
 	jsonlib "github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/http/errors/json"
 	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/pagination"
-	pkg "github.com/Shaheen-AlQaraghuli/wallet-go/pkg/wallet"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/pkg/wallet"
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,7 +29,21 @@ func New(walletSvc walletService) *Controller {
 	}
 }
 
-// @Router       /wallets/{id} [get].
+// GetWalletByID godoc
+//
+// @Summary      Get wallet by ID
+// @Description  Get wallet by ID
+// @ID getWalletByID
+// @Tags         wallets
+// @Accept       json
+// @Produce      json
+// @Param        id   path      string  true  "Wallet ID"
+// @Success      200  {object}  wallet.WalletResponse
+// @Failure      400  {object}  apierror.Error
+// @Failure      404  {object}  apierror.Error
+// @Failure      422  {object}  apierror.Error
+// @Failure      500  {object}  apierror.Error
+// @Router       /wallets/{id} [get]
 func (c *Controller) GetWalletByID(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {
@@ -38,19 +52,34 @@ func (c *Controller) GetWalletByID(ctx *gin.Context) {
 		return
 	}
 
-	wallet, err := c.walletSvc.GetWalletByID(ctx, id)
+	walletResp, err := c.walletSvc.GetWalletByID(ctx, id)
 	if err != nil {
 		jsonlib.SendGenericAPIError(ctx, err)
 
 		return
 	}
 
-	ctx.JSON(200, pkg.WalletResponse{
-		Wallet: wallet.ToResponse(),
+	ctx.JSON(200, wallet.WalletResponse{
+		Wallet: walletResp.ToResponse(),
 	})
 }
 
-// @Router       /wallets/{id}/status [patch].
+// UpdateWalletStatus godoc
+//
+// @Summary      Update wallet status
+// @Description  Update wallet status
+// @ID updateWalletStatus
+// @Tags         wallets
+// @Accept       json
+// @Produce      json
+// @Param        id     path      string  true  "Wallet ID"
+// @Param        status body      string  true  "New wallet status"
+// @Success      200    {object}  wallet.WalletResponse
+// @Failure      400    {object}  apierror.Error
+// @Failure      404    {object}  apierror.Error
+// @Failure      422    {object}  apierror.Error
+// @Failure      500    {object}  apierror.Error
+// @Router       /wallets/{id}/status [patch]
 func (c *Controller) UpdateWalletStatus(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {
@@ -59,28 +88,40 @@ func (c *Controller) UpdateWalletStatus(ctx *gin.Context) {
 		return
 	}
 
-	req := pkg.UpdateWalletStatusRequest{}
+	req := wallet.UpdateWalletStatusRequest{}
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		jsonlib.SendApiValidationError(ctx, err)
 
 		return
 	}
 
-	wallet, err := c.walletSvc.UpdateWalletStatus(ctx, id, string(req.Status))
+	walletResp, err := c.walletSvc.UpdateWalletStatus(ctx, id, string(req.Status))
 	if err != nil {
 		jsonlib.SendGenericAPIError(ctx, err)
 
 		return
 	}
 
-	ctx.JSON(200, pkg.WalletResponse{
-		Wallet: wallet.ToResponse(),
+	ctx.JSON(200, wallet.WalletResponse{
+		Wallet: walletResp.ToResponse(),
 	})
 }
 
-// @Router       /wallets [get].
+// ListWallets godoc
+//
+// @Summary      List wallets
+// @Description  List wallets with pagination
+// @ID listWallets
+// @Tags         wallets
+// @Accept       json
+// @Produce      json
+// @Param        query  query     wallet.ListWalletsRequest  false  "Query params"
+// @Success      200    {object}  wallet.WalletsResponse
+// @Failure      400    {object}  apierror.Error
+// @Failure      500    {object}  apierror.Error
+// @Router       /wallets [get]
 func (c *Controller) ListWallets(ctx *gin.Context) {
-	var query pkg.ListWalletsRequest
+	var query wallet.ListWalletsRequest
 	if err := ctx.ShouldBindQuery(&query); err != nil {
 		jsonlib.SendApiValidationError(ctx, err)
 
@@ -94,36 +135,63 @@ func (c *Controller) ListWallets(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(200, pkg.WalletsResponse{
+	ctx.JSON(200, wallet.WalletsResponse{
 		Wallets: wallets.ToResponse(),
-		Metadata: pkg.Metadata{
+		Metadata: wallet.Metadata{
 			Pagination: *pagination,
 		},
 	})
 }
 
-// @Router       /wallets [post].
+// CreateWallet godoc
+//
+// @Summary      Create a new wallet
+// @Description  Create a new wallet with initial balance
+// @ID createWallet
+// @Tags		 wallets
+// @Accept       json
+// @Produce      json
+// @Param        wallet body      wallet.CreateWalletRequest  true  "Wallet data"
+// @Success      201    {object}  wallet.WalletResponse
+// @Failure      400    {object}  apierror.Error
+// @Failure      422    {object}  apierror.Error
+// @Failure      500    {object}  apierror.Error
+// @Router       /wallets [post]
 func (c *Controller) CreateWallet(ctx *gin.Context) {
-	var req pkg.CreateWalletRequest
+	var req wallet.CreateWalletRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		jsonlib.SendApiValidationError(ctx, err)
 
 		return
 	}
 
-	wallet, err := c.walletSvc.CreateWallet(ctx, svcModels.CreateWalletRequest{}.FromRequest(req))
+	walletResp, err := c.walletSvc.CreateWallet(ctx, svcModels.CreateWalletRequest{}.FromRequest(req))
 	if err != nil {
 		jsonlib.SendGenericAPIError(ctx, err)
 
 		return
 	}
 
-	ctx.JSON(200, pkg.WalletResponse{
-		Wallet: wallet.ToResponse(),
+	ctx.JSON(200, wallet.WalletResponse{
+		Wallet: walletResp.ToResponse(),
 	})
 }
 
-// @Router       /wallets/{id}/balance [get].
+// GetWalletWithBalance godoc
+//
+// @Summary      Get wallet with balance
+// @Description  Get wallet with balance by ID
+// @ID getWalletWithBalance
+// @Tags         wallets
+// @Accept       json
+// @Produce      json
+// @Param        id   path      string  true  "Wallet ID"
+// @Success      200  {object}  wallet.WalletResponse
+// @Failure      400  {object}  apierror.Error
+// @Failure      404  {object}  apierror.Error
+// @Failure      422  {object}	apierror.Error
+// @Failure      500  {object}  apierror.Error
+// @Router       /wallets/{id}/balance [get]
 func (c *Controller) GetWalletWithBalance(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {
@@ -132,14 +200,14 @@ func (c *Controller) GetWalletWithBalance(ctx *gin.Context) {
 		return
 	}
 
-	wallet, err := c.walletSvc.GetWalletWithBalance(ctx, id)
+	walletResp, err := c.walletSvc.GetWalletWithBalance(ctx, id)
 	if err != nil {
 		jsonlib.SendGenericAPIError(ctx, err)
 
 		return
 	}
 
-	ctx.JSON(200, pkg.WalletResponse{
-		Wallet: wallet.ToResponse(),
+	ctx.JSON(200, wallet.WalletResponse{
+		Wallet: walletResp.ToResponse(),
 	})
 }
