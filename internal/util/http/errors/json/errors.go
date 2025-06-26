@@ -1,8 +1,8 @@
 package json
 
 import (
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/http/apierror"
 	"github.com/gin-gonic/gin"
-	"wallet/internal/util/http/apierror"
 )
 
 func SendApiValidationError(c *gin.Context, err error) {

@@ -1,7 +1,7 @@
 package wallet
 
 import (
-	"wallet/internal/util/pagination"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/pagination"
 )
 
 type Metadata struct {

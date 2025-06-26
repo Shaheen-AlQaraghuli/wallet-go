@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"wallet/internal/app/models"
-	"wallet/internal/util/dblib"
-	"wallet/internal/util/pagination"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/models"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/dblib"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/pagination"
 )
 
 type transactionRepo interface {

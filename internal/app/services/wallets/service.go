@@ -5,9 +5,9 @@ import (
 	"errors"
 	"time"
 
-	"wallet/internal/app/models"
-	"wallet/internal/util/pagination"
-	"wallet/internal/util/ulid"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/models"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/pagination"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/ulid"
 )
 
 type walletDB interface {

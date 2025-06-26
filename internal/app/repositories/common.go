@@ -1,8 +1,8 @@
 package repositories
 
 import (
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/pagination"
 	"gorm.io/gorm"
-	"wallet/internal/util/pagination"
 )
 
 const (

@@ -1,0 +1,7 @@
+with-expecter: true
+dir: "{{.InterfaceDir}}"
+structname: "Mock{{.InterfaceName}}"
+outpkg: "{{.PackageName}}"
+filename: "mock_{{.InterfaceNameSnake}}.go"
+all: true
+keeptree: true

@@ -3,8 +3,8 @@ package wallet
 import (
 	"time"
 
-	"wallet/internal/util/pagination"
-	"wallet/pkg/types"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/pagination"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/pkg/types"
 )
 
 //nolint:godox

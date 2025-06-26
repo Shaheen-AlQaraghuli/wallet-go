@@ -1,8 +1,8 @@
 package wallet
 
 import (
-	"wallet/internal/util/pagination"
-	types "wallet/pkg/types"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/pagination"
+	types "github.com/Shaheen-AlQaraghuli/wallet-go/pkg/types"
 )
 
 type CreateWalletRequest struct {
@@ -19,7 +19,7 @@ type ListWalletsRequest struct {
 	// Owner IDs to filter.
 	OwnerIDs []string `binding:"omitempty" form:"owner_ids,omitempty" json:"owner_ids,omitempty" url:"owner_ids,omitempty"`
 	// Currencies to filter.
-	Currencies types.Currencies `binding:"omitempty,walletStatusesEnum" form:"currencies,omitempty" json:"currencies,omitempty" url:"currencies,omitempty"`
+	Currencies types.Currencies `binding:"omitempty,currenciesEnum" form:"currencies,omitempty" json:"currencies,omitempty" url:"currencies,omitempty"`
 
 	pagination.Paginator
 }

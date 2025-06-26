@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/models"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/ulid"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/pkg/types"
 	"go.uber.org/zap"
-	"wallet/internal/app/models"
-	"wallet/internal/util/ulid"
-	"wallet/pkg/types"
 )
 
 func (s *Service) CreateTransaction(ctx context.Context, req models.CreateTransactionRequest) (

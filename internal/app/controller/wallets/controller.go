@@ -3,12 +3,12 @@ package wallets
 import (
 	"context"
 
+	svcModels "github.com/Shaheen-AlQaraghuli/wallet-go/internal/app/models"
+	_ "github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/http/apierror"
+	jsonlib "github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/http/errors/json"
+	"github.com/Shaheen-AlQaraghuli/wallet-go/internal/util/pagination"
+	pkg "github.com/Shaheen-AlQaraghuli/wallet-go/pkg/wallet"
 	"github.com/gin-gonic/gin"
-	svcModels "wallet/internal/app/models"
-	_ "wallet/internal/util/http/apierror"
-	jsonlib "wallet/internal/util/http/errors/json"
-	"wallet/internal/util/pagination"
-	pkg "wallet/pkg/wallet"
 )
 
 type walletService interface {
