@@ -3,6 +3,8 @@ MAKEFILE_DIR := $(abspath $(dir $(MAKEFILE)))
 BIN_DIR := $(MAKEFILE_DIR)/bin
 GOLANGCI_LINT_VERSION:=v1.64.5
 
+include .env
+
 install-linter:
 ifeq ("$(wildcard $(BIN_DIR)/golint/$(GOLANGCI_LINT_VERSION)/golangci-lint)","")
 	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | \
@@ -29,25 +31,25 @@ lint: install-linter
 	@"$(BIN_DIR)/golint/$(GOLANGCI_LINT_VERSION)/golangci-lint" run --fix
 
 run:
-	go run ./cmd/server/main.go
+	go run ./cmd/server/.
 
-db-up: ## Run the DB in a docker container
+db-up:
 	docker-compose up postgres -d
 
 db-down:
 	docker-compose stop postgres
 
 migrate-up:
-	@$(BIN_DIR)/goose -dir=./database/migrations postgres $(DB_WRITE_DSN) up
+	@$(BIN_DIR)/goose -dir=./database/migrations postgres $(DATABASE_DSN) up
 
 migrate-down:
-	@$(BIN_DIR)/goose -dir=./database/migrations postgres $(DB_WRITE_DSN) down
+	@$(BIN_DIR)/goose -dir=./database/migrations postgres $(DATABASE_DSN) down
 
 migrate-reset:
-	@$(BIN_DIR)/goose -dir=./database/migrations postgres $(DB_WRITE_DSN) reset
+	@$(BIN_DIR)/goose -dir=./database/migrations postgres $(DATABASE_DSN) reset
 
 migrate-create: ## Create a new DB migration file (E.g.: make migrate-create name=create_table)
-	@$(BIN_DIR)/goose -dir=./database/migrations postgres $(DB_WRITE_DSN) create $(name) sql
+	@$(BIN_DIR)/goose -dir=./database/migrations postgres $(DATABASE_DSN) create $(name) sql
 
 doc-gen:
 	# Remove all temp files that might be there because of a previously failed doc-gen.

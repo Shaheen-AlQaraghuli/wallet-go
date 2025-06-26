@@ -10,20 +10,16 @@ import (
 	"syscall"
 	"time"
 
-	"wallet/config"
-	"wallet/internal/app/cache"
-	"wallet/pkg/types"
-
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"wallet/config"
+	"wallet/internal/app/cache"
+	"wallet/pkg/types"
 )
 
-// @title Wallet Service API.
-// @version 1.0
-// @description Wallet Service Documentation.
-// @contact.name Wallet Service Owners
+// @contact.name Wallet Service Owners.
 func main() {
 	cfg := config.Config()
 
@@ -43,12 +39,17 @@ func main() {
 	setupRoutes(db, cache, router)
 
 	server := &http.Server{
-		Addr:    fmt.Sprintf(":%d", cfg.App.Port),
-		Handler: router,
+		Addr:              fmt.Sprintf(":%d", cfg.App.Port),
+		Handler:           router,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 
 	go func() {
 		log.Printf("Starting server on port %d", cfg.App.Port)
+
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Failed to start server: %v", err)
 		}
@@ -104,20 +105,6 @@ func setupRouter(cfg *config.AppConfig) *gin.Engine {
 
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
-
-	// todo remove this
-	/* router.Use(func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "*")
-		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
-		c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
-		}
-
-		c.Next()
-	}) */
 
 	return router
 }

@@ -2,6 +2,7 @@ package types
 
 import (
 	"errors"
+	"reflect"
 
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
@@ -25,6 +26,22 @@ func RegisterValidations() error {
 		return err
 	}
 
+	if err := registerEnumSliceValidation("transactionStatusesEnum", GetTransactionStatuses()); err != nil {
+		return err
+	}
+
+	if err := registerEnumSliceValidation("transactionTypesEnum", GetTransactionTypes()); err != nil {
+		return err
+	}
+
+	if err := registerEnumSliceValidation("currenciesEnum", GetCurrencies()); err != nil {
+		return err
+	}
+
+	if err := registerEnumSliceValidation("walletStatusesEnum", GetWalletStatuses()); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -44,6 +61,40 @@ func registerEnumValidation[T comparable](tag string, allValues []T) error {
 			}
 
 			return slices.Contains(allValues, val)
+		},
+	)
+}
+
+//nolint:gocognit
+func registerEnumSliceValidation[T comparable](tag string, allValues []T) error {
+	validate, ok := binding.Validator.Engine().(*validator.Validate)
+	if !ok {
+		return errors.New("validator engine is not of type *validator.Validate")
+	}
+
+	return validate.RegisterValidation(
+		tag,
+		func(fl validator.FieldLevel) bool {
+			slice := fl.Field()
+
+			if slice.Kind() != reflect.Slice {
+				return false
+			}
+
+			for i := 0; i < slice.Len(); i++ {
+				elem := slice.Index(i)
+
+				val, ok := elem.Interface().(T)
+				if !ok {
+					return false
+				}
+
+				if !slices.Contains(allValues, val) {
+					return false
+				}
+			}
+
+			return true
 		},
 	)
 }

@@ -45,7 +45,8 @@ func (r *Repository) Update(ctx context.Context, transaction models.Transaction)
 	return transaction, nil
 }
 
-func (r *Repository) List(ctx context.Context, query models.QueryTransactions) ([]models.Transaction, *pagination.Pagination, error) {
+func (r *Repository) List(ctx context.Context, query models.QueryTransactions) (
+	[]models.Transaction, *pagination.Pagination, error) {
 	var transactions []models.Transaction
 
 	queryBuilder := r.DB(ctx).Model(&models.Transaction{})

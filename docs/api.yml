@@ -1,6 +1,6 @@
 openapi: 3.0.3
 servers:
-  - url: http://localhost:8086/api
+  - url: http://localhost:8080/api
     description: Local Server
 tags:
   - name: transactions

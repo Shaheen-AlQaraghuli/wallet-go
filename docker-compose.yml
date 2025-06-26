@@ -9,7 +9,6 @@ services:
       POSTGRES_PASSWORD: "example"
       POSTGRES_USER: "postgres"
       POSTGRES_DB: "wallet"
-
   redis:
     image: redis:7.2-alpine
     ports:

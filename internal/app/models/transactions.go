@@ -10,38 +10,38 @@ import (
 )
 
 type Transaction struct {
-	ID             string
-	WalletID       string
-	Amount         int
-	Note           *string
-	Type           string
-	Status         string
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
+	ID        string
+	WalletID  string
+	Amount    int
+	Note      *string
+	Type      string
+	Status    string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type Transactions []Transaction
 
 func (t Transaction) ToResponse() pkg.Transaction {
- return pkg.Transaction{
-  ID:        t.ID,
-  WalletID:  t.WalletID,
-  Amount:    t.Amount,
-  Note:      t.Note,
-  Type:      types.TransactionType(t.Type),
-  Status:    types.TransactionStatus(t.Status),
-  CreatedAt: t.CreatedAt,
-  UpdatedAt: t.UpdatedAt,
- }
+	return pkg.Transaction{
+		ID:        t.ID,
+		WalletID:  t.WalletID,
+		Amount:    t.Amount,
+		Note:      t.Note,
+		Type:      types.TransactionType(t.Type),
+		Status:    types.TransactionStatus(t.Status),
+		CreatedAt: t.CreatedAt,
+		UpdatedAt: t.UpdatedAt,
+	}
 }
 
 func (t Transactions) ToResponse() []pkg.Transaction {
- res := make([]pkg.Transaction, 0, len(t))
- for _, transaction := range t {
-  res = append(res, transaction.ToResponse())
- }
+	res := make([]pkg.Transaction, 0, len(t))
+	for _, transaction := range t {
+		res = append(res, transaction.ToResponse())
+	}
 
- return res
+	return res
 }
 
 type QueryTransactions struct {
@@ -69,15 +69,18 @@ func (q QueryTransactions) FromRequest(req pkg.ListTransactionsRequest) QueryTra
 
 func (t Transactions) Balance() int {
 	balance := 0
+
 	for _, transaction := range t {
 		if transaction.Status == string(types.TransactionStatusFailed) {
 			continue
 		}
 
-		if transaction.Type == string(types.TransactionTypeCredit) {
-			balance += int(transaction.Amount)
+		if transaction.Type == string(types.TransactionTypeCredit) &&
+			transaction.Status != string(types.TransactionStatusPending) { //nolint:wsl
+
+			balance += transaction.Amount
 		} else if transaction.Type == string(types.TransactionTypeDebit) {
-			balance -= int(transaction.Amount)
+			balance -= transaction.Amount
 		}
 	}
 
@@ -109,7 +112,6 @@ type CreateTransactionRequest struct {
 	Amount         int
 	Note           *string
 	Type           string
-	Status         string
 	IdempotencyKey string
 }
 
@@ -125,10 +127,10 @@ func (r CreateTransactionRequest) FromRequest(req pkg.CreateTransactionRequest) 
 
 func (r CreateTransactionRequest) ToTransaction() Transaction {
 	return Transaction{
-		WalletID:       r.WalletID,
-		Amount:         r.Amount,
-		Note:           r.Note,
-		Type:           r.Type,
-		Status:         r.Status,
+		WalletID: r.WalletID,
+		Amount:   r.Amount,
+		Note:     r.Note,
+		Type:     r.Type,
+		Status:   string(types.TransactionStatusPending),
 	}
 }

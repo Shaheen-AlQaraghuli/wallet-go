@@ -2,20 +2,16 @@ package main
 
 import (
 	"time"
-	
-	transactionSvc "wallet/internal/app/services/transactions"
-	walletSvc "wallet/internal/app/services/wallets"
-
-	transactionCtrl "wallet/internal/app/controller/transactions"
-	walletCtrl "wallet/internal/app/controller/wallets"
-
-	transactionsRepo "wallet/internal/app/repositories/transactions"
-	walletRepo "wallet/internal/app/repositories/wallets"
-
-	cacher "wallet/internal/app/cache"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	cacher "wallet/internal/app/cache"
+	transactionCtrl "wallet/internal/app/controller/transactions"
+	walletCtrl "wallet/internal/app/controller/wallets"
+	transactionsRepo "wallet/internal/app/repositories/transactions"
+	walletRepo "wallet/internal/app/repositories/wallets"
+	transactionSvc "wallet/internal/app/services/transactions"
+	walletSvc "wallet/internal/app/services/wallets"
 )
 
 func addWalletRoutes(db *gorm.DB, cache *cacher.Cache, routerGroup *gin.RouterGroup) {

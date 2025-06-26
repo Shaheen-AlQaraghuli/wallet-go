@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	balanceKeyPrefix = "balance:"
+	balanceKeyPrefix = "balance"
 	balanceTTL       = 24 * time.Hour
 )
 
@@ -21,6 +21,7 @@ func (c *Cache) GetBalance(ctx context.Context, walletID string) (*int, error) {
 	val, err := c.client.Get(ctx, key).Result()
 	if err != nil {
 		if errors.Is(err, redis.Nil) {
+			//nolint:nilnil
 			return nil, nil
 		}
 

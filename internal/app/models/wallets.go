@@ -3,11 +3,10 @@ package models
 import (
 	"time"
 
+	"gorm.io/gorm"
 	"wallet/internal/util/pagination"
 	"wallet/pkg/types"
 	pkg "wallet/pkg/wallet"
-
-	"gorm.io/gorm"
 )
 
 type Wallets []Wallet
@@ -34,7 +33,7 @@ func (w Wallet) ToResponse() pkg.Wallet {
 	}
 }
 
-func (w  Wallets) ToResponse() []pkg.Wallet {
+func (w Wallets) ToResponse() []pkg.Wallet {
 	res := make([]pkg.Wallet, 0, len(w))
 
 	for _, wallet := range w {

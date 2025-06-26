@@ -22,7 +22,8 @@ func (cl *Client) GetWalletByID(ctx context.Context, id string) (WalletResponse,
 	return wallet, nil
 }
 
-func (cl *Client) UpdateWalletStatus(ctx context.Context, id string, req UpdateWalletStatusRequest) (WalletResponse, error) {
+func (cl *Client) UpdateWalletStatus(ctx context.Context, id string, req UpdateWalletStatusRequest) (
+	WalletResponse, error) {
 	var wallet WalletResponse
 
 	url := cl.buildUrl(fmt.Sprintf("/wallets/%s/status", id), nil)
