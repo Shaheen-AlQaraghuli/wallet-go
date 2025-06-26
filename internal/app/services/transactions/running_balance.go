@@ -25,7 +25,7 @@ func (s *Service) RunningBalance(ctx context.Context, walletID string) (int, err
 	}
 
 	defer func() {
-		unlock()
+		unlock(ctx)
 	}()
 
 	transactions, err := s.db.ListAllTransactions(ctx, walletID)

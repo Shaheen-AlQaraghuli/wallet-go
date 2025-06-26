@@ -52,6 +52,7 @@ func (r *Repository) List(ctx context.Context, query models.QueryWallets) ([]mod
 	applyFilters(queryBuilder, query)
 
 	paginator := repositories.GetPaginator(query.Paginator)
+
 	if err := queryBuilder.Scopes(repositories.Paginate(paginator)).Find(&wallets).Error; err != nil {
 		return nil, nil, err
 	}

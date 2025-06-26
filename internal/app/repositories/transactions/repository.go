@@ -37,16 +37,8 @@ func (r *Repository) GetByID(ctx context.Context, id string) (models.Transaction
 	return transaction, nil
 }
 
-func (r *Repository) UpdateStatus(ctx context.Context, id string, status string) (models.Transaction, error) {
-	var transaction models.Transaction
-	if err := r.DB(ctx).
-		Model(&transaction).
-		Where("id = ?", id).
-		Updates(
-			map[string]string{
-				"status": status,
-			}).
-		Error; err != nil {
+func (r *Repository) Update(ctx context.Context, transaction models.Transaction) (models.Transaction, error) {
+	if err := r.DB(ctx).Save(&transaction).Error; err != nil {
 		return models.Transaction{}, err
 	}
 
@@ -74,10 +66,10 @@ func (r *Repository) List(ctx context.Context, query models.QueryTransactions) (
 	}
 
 	return transactions, pagination.NewPagination(
-		*query.Paginator.Page,
+		*paginator.Page,
 		len(transactions),
 		int(total),
-		*query.Paginator.PerPage,
+		*paginator.PerPage,
 	), nil
 }
 

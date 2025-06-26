@@ -1,7 +1,9 @@
 package wallet
 
 import (
+	"wallet/internal/util/pagination"
 	"wallet/pkg/types"
+	"time"
 )
 
 type CreateTransactionRequest struct {
@@ -11,10 +13,8 @@ type CreateTransactionRequest struct {
 	Amount int `binding:"required" form:"amount" json:"amount" url:"amount"`
 	// Note for the transaction.
 	Note *string `binding:"omitempty" form:"note,omitempty" json:"note,omitempty" url:"note,omitempty"`
-	// Type of transaction credit or debit.
-	Type string `binding:"required" form:"type" json:"type" url:"type"`
-	// Status of the transaction.
-	Status string `binding:"required" form:"status" json:"status" url:"status"`
+	// Type of transaction.
+	Type types.TransactionType `binding:"required,transactionTypeEnum" form:"type" json:"type" url:"type"`
 	// Idempotency key for the transaction.
 	IdempotencyKey string `binding:"required" form:"idempotency_key" json:"idempotency_key" url:"idempotency_key"`
 }
@@ -25,13 +25,15 @@ type ListTransactionsRequest struct {
 	// Wallet IDs to filter.
 	WalletIDs []string `binding:"omitempty" form:"wallet_ids,omitempty" json:"wallet_ids,omitempty" url:"wallet_ids,omitempty"`
 	// Statuses of the transactions to filter.
-	Statuses []types.TransactionStatus `binding:"omitempty,transactionStatusEnum" form:"statuses,omitempty" json:"statuses,omitempty" url:"statuses,omitempty"`
+	Statuses types.TransactionStatuses `binding:"omitempty,transactionStatusEnum" form:"statuses,omitempty" json:"statuses,omitempty" url:"statuses,omitempty"`
 	// Types of the transactions to filter.
-	Types []types.TransactionType `binding:"omitempty,transactionTypeEnum" form:"types,omitempty" json:"types,omitempty" url:"types,omitempty"`
+	Types types.TransactionTypes `binding:"omitempty,transactionTypeEnum" form:"types,omitempty" json:"types,omitempty" url:"types,omitempty"`
 	// CreatedAtFrom is the start date for filtering transactions.
-	CreatedAtFrom string `binding:"omitempty" form:"created_at_from,omitempty" json:"created_at_from,omitempty" url:"created_at_from,omitempty"`
+	CreatedAtFrom *time.Time `binding:"omitempty" form:"created_at_from,omitempty" json:"created_at_from,omitempty" url:"created_at_from,omitempty"`
 	// CreatedAtTo is the end date for filtering transactions.
-	CreatedAtTo string `binding:"omitempty" form:"created_at_to,omitempty" json:"created_at_to,omitempty" url:"created_at_to,omitempty"`
+	CreatedAtTo *time.Time `binding:"omitempty" form:"created_at_to,omitempty" json:"created_at_to,omitempty" url:"created_at_to,omitempty"`
+
+	pagination.Paginator
 }
 
 type UpdateTransactionStatusRequest struct {

@@ -1,6 +1,7 @@
 package wallet
 
 import (
+	"wallet/internal/util/pagination"
 	types "wallet/pkg/types"
 )
 
@@ -9,8 +10,6 @@ type CreateWalletRequest struct {
 	OwnerID string `binding:"required" form:"owner_id" json:"owner_id" url:"owner_id"`
 	// Currency of the wallet.
 	Currency types.Currency `binding:"required, currencyEnum" form:"currency" json:"currency" url:"currency"`
-	// Status of the wallet.
-	Status types.WalletStatus `binding:"required, walletStatusEnum" form:"status" json:"status" url:"status"`
 }
 
 type ListWalletsRequest struct {
@@ -19,7 +18,9 @@ type ListWalletsRequest struct {
 	// Owner IDs to filter.
 	OwnerIDs []string `binding:"omitempty" form:"owner_ids,omitempty" json:"owner_ids,omitempty" url:"owner_ids,omitempty"`
 	// Currencies to filter.
-	Currencies []types.Currency `binding:"omitempty, currencyEnum" form:"currencies,omitempty" json:"currencies,omitempty" url:"currencies,omitempty"`
+	Currencies types.Currencies `binding:"omitempty, currencyEnum" form:"currencies,omitempty" json:"currencies,omitempty" url:"currencies,omitempty"`
+
+	pagination.Paginator
 }
 
 type UpdateWalletStatusRequest struct {

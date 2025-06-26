@@ -1,7 +1,9 @@
 package pagination
 
 type Paginator struct {
+	// Page is the current page number, starting from 1.
 	Page    *int `binding:"omitempty,gte=1"         form:"page,omitempty"     json:"page,omitempty"     url:"page,omitempty"`
+	// PerPage is the number of items per page, with a maximum of 100.
 	PerPage *int `binding:"omitempty,gte=1,lte=100" form:"per_page,omitempty" json:"per_page,omitempty" url:"per_page,omitempty"`
 }
 

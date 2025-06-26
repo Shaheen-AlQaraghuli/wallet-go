@@ -1,0 +1,9 @@
+openapi: 3.0.3
+servers:
+  - url: http://localhost:8086/api
+    description: Local Server
+tags:
+  - name: transactions
+    description: Transactions
+  - name: wallets
+    description: Wallets

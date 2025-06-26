@@ -1,0 +1,797 @@
+openapi: 3.0.3
+servers:
+  - url: http://localhost:8086/api
+    description: Local Server
+tags:
+  - name: transactions
+    description: Transactions
+  - name: wallets
+    description: Wallets
+info:
+  contact:
+    name: Wallet Service Owners
+  description: Wallet Service Documentation.
+  title: Wallet Service API.
+  version: "1.0"
+paths:
+  /transactions:
+    get:
+      description: List transactions with pagination
+      operationId: listTransactions
+      parameters:
+        - description: CreatedAtFrom is the start date for filtering transactions.
+          in: query
+          name: created_at_from
+          schema:
+            type: string
+        - description: CreatedAtTo is the end date for filtering transactions.
+          in: query
+          name: created_at_to
+          schema:
+            type: string
+        - description: IDs of the transactions to filter.
+          explode: true
+          in: query
+          name: ids
+          schema:
+            items:
+              type: string
+            type: array
+          style: form
+        - description: "Page is the current page number, starting from 1."
+          in: query
+          name: page
+          schema:
+            minimum: 1
+            type: integer
+        - description: "PerPage is the number of items per page, with a maximum of 100."
+          in: query
+          name: per_page
+          schema:
+            maximum: 100
+            minimum: 1
+            type: integer
+        - description: Statuses of the transactions to filter.
+          explode: true
+          in: query
+          name: statuses
+          schema:
+            items:
+              enum:
+                - pending
+                - completed
+                - failed
+              type: string
+            type: array
+          style: form
+        - description: Types of the transactions to filter.
+          explode: true
+          in: query
+          name: types
+          schema:
+            items:
+              enum:
+                - credit
+                - debit
+              type: string
+            type: array
+          style: form
+        - description: Wallet IDs to filter.
+          explode: true
+          in: query
+          name: wallet_ids
+          schema:
+            items:
+              type: string
+            type: array
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_pkg_wallet.TransactionsResponse"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Not Found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Internal Server Error
+      summary: List transactions
+      tags:
+        - transactions
+    post:
+      description: Create a new transaction
+      operationId: createTransaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/wallet_pkg_wallet.CreateTransactionRequest"
+        description: Transaction data
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_pkg_wallet.TransactionResponse"
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Not Found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Internal Server Error
+      summary: Create transaction
+      tags:
+        - transactions
+      x-codegen-request-body-name: transaction
+  /transactions/{id}:
+    get:
+      description: Get transaction by ID
+      operationId: getTransactionByID
+      parameters:
+        - description: Transaction ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_pkg_wallet.TransactionResponse"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Not Found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Internal Server Error
+      summary: Get transaction by ID
+      tags:
+        - transactions
+  /transactions/{id}/status:
+    put:
+      description: Update the status of a transaction
+      operationId: updateTransactionStatus
+      parameters:
+        - description: Transaction ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        description: New status for the transaction
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_pkg_wallet.TransactionResponse"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Not Found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Internal Server Error
+      summary: Update transaction status
+      tags:
+        - transactions
+      x-codegen-request-body-name: status
+  /wallets:
+    get:
+      description: List wallets with pagination
+      operationId: listWallets
+      parameters:
+        - description: Currencies to filter.
+          explode: true
+          in: query
+          name: currencies
+          schema:
+            items:
+              enum:
+                - USD
+                - EUR
+                - GBP
+                - AED
+                - BHD
+                - SAR
+              type: string
+            type: array
+          style: form
+        - description: IDs of the wallets to filter.
+          explode: true
+          in: query
+          name: ids
+          schema:
+            items:
+              type: string
+            type: array
+          style: form
+        - description: Owner IDs to filter.
+          explode: true
+          in: query
+          name: owner_ids
+          schema:
+            items:
+              type: string
+            type: array
+          style: form
+        - description: "Page is the current page number, starting from 1."
+          in: query
+          name: page
+          schema:
+            minimum: 1
+            type: integer
+        - description: "PerPage is the number of items per page, with a maximum of 100."
+          in: query
+          name: per_page
+          schema:
+            maximum: 100
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_pkg_wallet.WalletsResponse"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Internal Server Error
+      summary: List wallets
+      tags:
+        - wallets
+    post:
+      description: Create a new wallet with initial balance
+      operationId: createWallet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/wallet_pkg_wallet.CreateWalletRequest"
+        description: Wallet data
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_pkg_wallet.WalletResponse"
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Bad Request
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Internal Server Error
+      summary: Create a new wallet
+      tags:
+        - wallets
+      x-codegen-request-body-name: wallet
+  /wallets/{id}:
+    get:
+      description: Get wallet by ID
+      operationId: getWalletByID
+      parameters:
+        - description: Wallet ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_pkg_wallet.WalletResponse"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Not Found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Internal Server Error
+      summary: Get wallet by ID
+      tags:
+        - wallets
+  /wallets/{id}/balance:
+    get:
+      description: Get wallet with balance by ID
+      operationId: getWalletWithBalance
+      parameters:
+        - description: Wallet ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_pkg_wallet.WalletResponse"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Not Found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Internal Server Error
+      summary: Get wallet with balance
+      tags:
+        - wallets
+  /wallets/{id}/status:
+    patch:
+      description: Update wallet status
+      operationId: updateWalletStatus
+      parameters:
+        - description: Wallet ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        description: New wallet status
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_pkg_wallet.WalletResponse"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Not Found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/wallet_internal_util_http_Error"
+          description: Internal Server Error
+      summary: Update wallet status
+      tags:
+        - wallets
+      x-codegen-request-body-name: status
+components:
+  schemas:
+    wallet_internal_util_http_Error:
+      example:
+        message: message
+        errors:
+          - source: source
+            message: message
+          - source: source
+            message: message
+      properties:
+        errors:
+          items:
+            $ref: "#/components/schemas/wallet_internal_util_http_ValidationError"
+          type: array
+        message:
+          type: string
+    wallet_internal_util_http_ValidationError:
+      example:
+        source: source
+        message: message
+      properties:
+        message:
+          type: string
+        source:
+          type: string
+    wallet_internal_util_Pagination:
+      example:
+        per_page: 1
+        total: 5
+        count: 0
+        page: 6
+        total_pages: 5
+      properties:
+        count:
+          type: integer
+        page:
+          type: integer
+        per_page:
+          type: integer
+        total:
+          type: integer
+        total_pages:
+          type: integer
+    wallet_pkg_Currency:
+      enum:
+        - USD
+        - EUR
+        - GBP
+        - AED
+        - BHD
+        - SAR
+      type: string
+      x-enum-varnames:
+        - CurrencyUSD
+        - CurrencyEUR
+        - CurrencyGBP
+        - CurrencyAED
+        - CurrencyBHD
+        - CurrencySAR
+    wallet_pkg_TransactionStatus:
+      enum:
+        - pending
+        - completed
+        - failed
+      type: string
+      x-enum-varnames:
+        - TransactionStatusPending
+        - TransactionStatusCompleted
+        - TransactionStatusFailed
+    wallet_pkg_TransactionType:
+      enum:
+        - credit
+        - debit
+      type: string
+      x-enum-varnames:
+        - TransactionTypeCredit
+        - TransactionTypeDebit
+    wallet_pkg_WalletStatus:
+      enum:
+        - active
+        - inactive
+        - frozen
+      type: string
+      x-enum-varnames:
+        - WalletStatusActive
+        - WalletStatusInactive
+        - WalletStatusFrozen
+    wallet_pkg_wallet.CreateTransactionRequest:
+      properties:
+        amount:
+          description: Amount to be added or deducted from the wallet.
+          type: integer
+        idempotency_key:
+          description: Idempotency key for the transaction.
+          type: string
+        note:
+          description: Note for the transaction.
+          type: string
+        type:
+          allOf:
+            - $ref: "#/components/schemas/wallet_pkg_TransactionType"
+          description: Type of transaction.
+        wallet_id:
+          description: Unique identifier for the wallet.
+          type: string
+      required:
+        - amount
+        - idempotency_key
+        - type
+        - wallet_id
+    wallet_pkg_wallet.CreateWalletRequest:
+      properties:
+        currency:
+          allOf:
+            - $ref: "#/components/schemas/wallet_pkg_Currency"
+          description: Currency of the wallet.
+        owner_id:
+          description: Unique identifier for the wallet owner.
+          type: string
+      required:
+        - currency
+        - owner_id
+    wallet_pkg_wallet.Metadata:
+      example:
+        pagination:
+          per_page: 1
+          total: 5
+          count: 0
+          page: 6
+          total_pages: 5
+      properties:
+        pagination:
+          $ref: "#/components/schemas/wallet_internal_util_Pagination"
+    wallet_pkg_wallet.Transaction:
+      example:
+        note: note
+        amount: 2
+        wallet_id: wallet_id
+        updated_at: updated_at
+        created_at: created_at
+        id: id
+        type: credit
+        status: pending
+      properties:
+        amount:
+          type: integer
+        created_at:
+          type: string
+        id:
+          type: string
+        note:
+          type: string
+        status:
+          $ref: "#/components/schemas/wallet_pkg_TransactionStatus"
+        type:
+          $ref: "#/components/schemas/wallet_pkg_TransactionType"
+        updated_at:
+          type: string
+        wallet_id:
+          type: string
+    wallet_pkg_wallet.TransactionResponse:
+      example:
+        transaction:
+          note: note
+          amount: 2
+          wallet_id: wallet_id
+          updated_at: updated_at
+          created_at: created_at
+          id: id
+          type: credit
+          status: pending
+      properties:
+        transaction:
+          $ref: "#/components/schemas/wallet_pkg_wallet.Transaction"
+    wallet_pkg_wallet.TransactionsResponse:
+      example:
+        metadata:
+          pagination:
+            per_page: 1
+            total: 5
+            count: 0
+            page: 6
+            total_pages: 5
+        transactions:
+          - note: note
+            amount: 2
+            wallet_id: wallet_id
+            updated_at: updated_at
+            created_at: created_at
+            id: id
+            type: credit
+            status: pending
+          - note: note
+            amount: 2
+            wallet_id: wallet_id
+            updated_at: updated_at
+            created_at: created_at
+            id: id
+            type: credit
+            status: pending
+      properties:
+        metadata:
+          $ref: "#/components/schemas/wallet_pkg_wallet.Metadata"
+        transactions:
+          items:
+            $ref: "#/components/schemas/wallet_pkg_wallet.Transaction"
+          type: array
+    wallet_pkg_wallet.Wallet:
+      example:
+        balance: 0
+        updated_at: updated_at
+        owner_id: owner_id
+        created_at: created_at
+        currency: USD
+        id: id
+        status: active
+      properties:
+        balance:
+          type: integer
+        created_at:
+          type: string
+        currency:
+          $ref: "#/components/schemas/wallet_pkg_Currency"
+        id:
+          type: string
+        owner_id:
+          type: string
+        status:
+          $ref: "#/components/schemas/wallet_pkg_WalletStatus"
+        updated_at:
+          type: string
+    wallet_pkg_wallet.WalletResponse:
+      example:
+        wallet:
+          balance: 0
+          updated_at: updated_at
+          owner_id: owner_id
+          created_at: created_at
+          currency: USD
+          id: id
+          status: active
+      properties:
+        wallet:
+          $ref: "#/components/schemas/wallet_pkg_wallet.Wallet"
+    wallet_pkg_wallet.WalletsResponse:
+      example:
+        metadata:
+          pagination:
+            per_page: 1
+            total: 5
+            count: 0
+            page: 6
+            total_pages: 5
+        wallets:
+          - balance: 0
+            updated_at: updated_at
+            owner_id: owner_id
+            created_at: created_at
+            currency: USD
+            id: id
+            status: active
+          - balance: 0
+            updated_at: updated_at
+            owner_id: owner_id
+            created_at: created_at
+            currency: USD
+            id: id
+            status: active
+      properties:
+        metadata:
+          $ref: "#/components/schemas/wallet_pkg_wallet.Metadata"
+        wallets:
+          items:
+            $ref: "#/components/schemas/wallet_pkg_wallet.Wallet"
+          type: array
+x-original-swagger-version: "2.0"

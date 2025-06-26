@@ -6,31 +6,65 @@ import (
 	"github.com/looplab/fsm"
 	"wallet/internal/util/pagination"
 	"wallet/pkg/types"
+	pkg "wallet/pkg/wallet"
 )
 
 type Transaction struct {
-	ID            string
-	WalletID      string
-	Amount        int
-	Note          *string
-	Type          string
-	Status        string
-	IdempotencyKey string `gorm:"-"`
-	CreatedAt     time.Time 
-	UpdatedAt     time.Time 
+	ID             string
+	WalletID       string
+	Amount         int
+	Note           *string
+	Type           string
+	Status         string
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
 }
 
 type Transactions []Transaction
+
+func (t Transaction) ToResponse() pkg.Transaction {
+ return pkg.Transaction{
+  ID:        t.ID,
+  WalletID:  t.WalletID,
+  Amount:    t.Amount,
+  Note:      t.Note,
+  Type:      types.TransactionType(t.Type),
+  Status:    types.TransactionStatus(t.Status),
+  CreatedAt: t.CreatedAt,
+  UpdatedAt: t.UpdatedAt,
+ }
+}
+
+func (t Transactions) ToResponse() []pkg.Transaction {
+ res := make([]pkg.Transaction, 0, len(t))
+ for _, transaction := range t {
+  res = append(res, transaction.ToResponse())
+ }
+
+ return res
+}
 
 type QueryTransactions struct {
 	IDs           []string
 	WalletIDs     []string
 	Statuses      []string
-	Types         []string   
-	CreatedAtFrom *time.Time 
-	CreatedAtTo   *time.Time 
+	Types         []string
+	CreatedAtFrom *time.Time
+	CreatedAtTo   *time.Time
 
-	*pagination.Paginator
+	pagination.Paginator
+}
+
+func (q QueryTransactions) FromRequest(req pkg.ListTransactionsRequest) QueryTransactions {
+	return QueryTransactions{
+		IDs:           req.IDs,
+		WalletIDs:     req.WalletIDs,
+		Statuses:      req.Statuses.String(),
+		Types:         req.Types.String(),
+		CreatedAtFrom: req.CreatedAtFrom,
+		CreatedAtTo:   req.CreatedAtTo,
+		Paginator:     req.Paginator,
+	}
 }
 
 func (t Transactions) Balance() int {
@@ -59,8 +93,8 @@ var (
 		},
 		{
 			Name: string(types.TransactionStatusCompleted),
-   			Src:  []string{string(types.TransactionStatusPending)},
-   			Dst:  string(types.TransactionStatusCompleted),
+			Src:  []string{string(types.TransactionStatusPending)},
+			Dst:  string(types.TransactionStatusCompleted),
 		},
 		{
 			Name: string(types.TransactionStatusFailed),
@@ -69,3 +103,32 @@ var (
 		},
 	}
 )
+
+type CreateTransactionRequest struct {
+	WalletID       string
+	Amount         int
+	Note           *string
+	Type           string
+	Status         string
+	IdempotencyKey string
+}
+
+func (r CreateTransactionRequest) FromRequest(req pkg.CreateTransactionRequest) CreateTransactionRequest {
+	return CreateTransactionRequest{
+		WalletID:       req.WalletID,
+		Amount:         req.Amount,
+		Note:           req.Note,
+		Type:           req.Type.String(),
+		IdempotencyKey: req.IdempotencyKey,
+	}
+}
+
+func (r CreateTransactionRequest) ToTransaction() Transaction {
+	return Transaction{
+		WalletID:       r.WalletID,
+		Amount:         r.Amount,
+		Note:           r.Note,
+		Type:           r.Type,
+		Status:         r.Status,
+	}
+}

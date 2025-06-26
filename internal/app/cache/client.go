@@ -24,12 +24,12 @@ type Cache struct {
 }
 
 func New(url, appName string) *Cache {
-	redisOptions, err := redis.ParseURL(url)
+	parsedUrl, err := redis.ParseURL(url)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	client := redis.NewClient(redisOptions)
+	client := redis.NewClient(parsedUrl)
 
 	return &Cache{
 		client:  client,

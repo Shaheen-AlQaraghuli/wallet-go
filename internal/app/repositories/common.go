@@ -36,26 +36,19 @@ func Paginate(paginator pagination.Paginator) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func GetPaginator(paginator *pagination.Paginator) pagination.Paginator {
+func GetPaginator(paginator pagination.Paginator) pagination.Paginator {
 	page := DefaultPageSize
 	perPage := MaxPerPage
 
-	if paginator == nil {
-		return pagination.Paginator{
-			Page:    &page,
-			PerPage: &perPage,
-		}
-	}
-
-	if paginator.Page == nil {
+	if paginator.Page == nil || *paginator.Page < 1 {
 		paginator.Page = &page
 	}
 
-	if paginator.PerPage == nil {
+	if paginator.PerPage == nil || *paginator.PerPage < 1 {
 		paginator.PerPage = &perPage
 	}
 
-	return *paginator
+	return paginator
 }
 
 func CountTotal(db *gorm.DB, paginator pagination.Paginator, count int) (int64, error) {

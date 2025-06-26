@@ -60,14 +60,14 @@ func (s *Service) UpdateWalletStatus(ctx context.Context, id, status string) (mo
 	return s.db.Update(ctx, wallet)
 }
 
-func (s *Service) ListWallets(ctx context.Context, query models.QueryWallets) ([]models.Wallet, *pagination.Pagination, error) {
+func (s *Service) ListWallets(ctx context.Context, query models.QueryWallets) (models.Wallets, *pagination.Pagination, error) {
 	return s.db.List(ctx, query)
 }
 
-func (s *Service) CreateWallet(ctx context.Context, wallet models.Wallet) (models.Wallet, error) {
+func (s *Service) CreateWallet(ctx context.Context, req models.CreateWalletRequest) (models.Wallet, error) {
 	list, _, err := s.db.List(ctx, models.QueryWallets{
-		OwnerIDs:   []string{wallet.OwnerID},
-		Currencies: []string{wallet.Currency},
+		OwnerIDs:   []string{req.OwnerID},
+		Currencies: []string{req.Currency},
 	})
 	if err != nil {
 		return models.Wallet{}, err
@@ -78,6 +78,7 @@ func (s *Service) CreateWallet(ctx context.Context, wallet models.Wallet) (model
 	}
 
 	newID := ulid.GenerateID(s.now())
+	wallet := req.ToWallet()
 	wallet.ID = newID
 
 	return s.db.Create(ctx, wallet)
