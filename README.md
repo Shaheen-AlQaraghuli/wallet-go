@@ -27,11 +27,13 @@ cd wallet-go
 
 ### 2. Environment Setup
 
+Copy environment template
 ```bash
-# Copy environment template
 cp .env.example .env
+```
 
-# Edit .env with your configuration
+Edit `.env` with your configuration
+```bash
 nano .env
 ```
 
@@ -46,31 +48,36 @@ REDIS_URL=redis://localhost:6379
 
 ### 3. Install Dependencies & Tools
 
+Install all required tools (linter, swagger, mockery, etc.)
 ```bash
-# Install all required tools (linter, swagger, mockery, etc.)
 make install-tools
+```
 
-# Download Go dependencies
+Download Go dependencies
+```bash
 go mod download
 ```
 
 ### 4. Start Infrastructure Services
 
+Start PostgreSQL and Redis
 ```bash
-# Start PostgreSQL and Redis
 make setup
+```
 
-# Wait a moment for services to be ready, then run migrations
+Wait a moment for services to be ready, then run migrations
+```
 make migrate-up
 ```
 
 ### 5. Run the Service
 
+Start the API server
 ```bash
-# Start the API server
 make run
-
-# Or run directly with go
+```
+Or run directly with go
+```bash
 go run ./cmd/server/.
 ```
 
@@ -80,8 +87,8 @@ The API will be available at `http://localhost:8080/api`
 
 ### Generate Documentation
 
+Generate OpenAPI specification
 ```bash
-# Generate OpenAPI specification
 make doc-gen
 ```
 
