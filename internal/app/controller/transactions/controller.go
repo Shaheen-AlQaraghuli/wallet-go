@@ -116,7 +116,7 @@ func (c *Controller) UpdateTransactionStatus(ctx *gin.Context) {
 // @Tags         transactions
 // @Accept       json
 // @Produce      json
-// @Param        query  query      wallet.ListTransactionsRequest  true  "Query parameters"
+// @Param        query  wallet.ListTransactionsRequest  true  "Query parameters"
 // @Success      200    {object}  wallet.TransactionsResponse
 // @Failure      400    {object}  apierror.Error
 // @Failure      404    {object}  apierror.Error
@@ -145,7 +145,6 @@ func (c *Controller) ListTransactions(ctx *gin.Context) {
 		},
 	})
 }
-
 
 // CreateTransaction godoc
 //

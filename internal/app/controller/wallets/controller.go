@@ -115,7 +115,7 @@ func (c *Controller) UpdateWalletStatus(ctx *gin.Context) {
 // @Tags         wallets
 // @Accept       json
 // @Produce      json
-// @Param        query  query     wallet.ListWalletsRequest  false  "Query params"
+// @Param        query  wallet.ListWalletsRequest  false  "Query params"
 // @Success      200    {object}  wallet.WalletsResponse
 // @Failure      400    {object}  apierror.Error
 // @Failure      500    {object}  apierror.Error

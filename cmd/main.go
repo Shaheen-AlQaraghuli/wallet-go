@@ -9,6 +9,6 @@ import (
 // @description Wallet Service Documentation.
 // @contact.name Wallet Service Owners
 // @BasePath    /api/
-func main(){
+func main() {
 	server.StartServer()
 }
