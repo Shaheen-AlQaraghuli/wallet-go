@@ -105,11 +105,22 @@ func (s *Service) refreshCacheAfterTransactionUpdate(
 }
 
 func shouldUpdateBalanceCache(transaction models.Transaction, previousStatus string) bool {
-	//update if current is failed or pending to completed.
-	return transaction.Status != previousStatus &&
-		(transaction.Status == string(types.TransactionStatusFailed) ||
-			previousStatus == string(types.TransactionStatusPending) &&
-				transaction.Status == string(types.TransactionStatusCompleted))
+    if transaction.Status == previousStatus {
+        return false
+    }
+
+    if transaction.Type == string(types.TransactionTypeDebit) && 
+        transaction.Status == string(types.TransactionStatusFailed) {
+        return true
+    }
+
+    if transaction.Type == string(types.TransactionTypeCredit) &&
+        previousStatus == string(types.TransactionStatusPending) &&
+        transaction.Status == string(types.TransactionStatusCompleted) {
+        return true
+    }
+
+    return false
 }
 
 func computeNewBalanceAfterTransactionStatusUpdate(

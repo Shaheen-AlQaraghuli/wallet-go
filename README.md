@@ -58,7 +58,7 @@ go mod download
 
 ```bash
 # Start PostgreSQL and Redis
-make db-up
+make setup
 
 # Wait a moment for services to be ready, then run migrations
 make migrate-up
@@ -74,7 +74,7 @@ make run
 go run ./cmd/server/.
 ```
 
-The API will be available at `http://localhost:8080`
+The API will be available at `http://localhost:8080/api`
 
 ## API Documentation
 
@@ -85,12 +85,10 @@ The API will be available at `http://localhost:8080`
 make doc-gen
 ```
 
-This creates the API documentation at `./docs/api.yaml`
+This creates the API documentation in `./docs`
 
 ### View Documentation
-1. Go to https://editor.swagger.io/
-2. Copy the content from `./docs/api.yaml`
-3. Paste it into the editor
+Go to http://localhost:8080/swagger/index.html
 
 
 ## Development
@@ -103,6 +101,7 @@ make run                    # Start the server
 make lint                   # Run linter with auto-fix
 
 # Database
+make setup                  # Start PostgreSQL and Redis
 make db-up                  # Start PostgreSQL
 make db-down                # Stop PostgreSQL  
 make migrate-up             # Run migrations
@@ -111,25 +110,24 @@ make migrate-reset          # Reset all migrations
 make migrate-create name=   # Create new migration
 
 # Documentation
-make doc-gen                # Generate API documentation
-make doc-lint               # Lint API documentation
+make doc-gen                # Generate API documentatio
 ```
 
 ### Project Structure
 
 ```
-├── cmd/server/             # Application entry point
+├── cmd/                    # Application entry point
 ├── internal/app/           # Application core
-│   ├── cache/             # Redis caching layer
-│   ├── controller/        # HTTP controllers
-│   ├── models/            # Data models
-│   ├── repositories/      # Data access layer
-│   └── services/          # Business logic
-├── pkg/                   # Public packages
-│   ├── types/            # Type definitions
-│   └── wallet/           # Client SDK
-├── database/migrations/   # Database migrations
-└── docs/                 # API documentation
+│   ├── cache/              # Redis caching layer
+│   ├── controller/         # HTTP controllers
+│   ├── models/             # Data models
+│   ├── repositories/       # Data access layer
+│   └── services/           # Business logic
+├── pkg/                    # Public packages
+│   ├── types/              # Type definitions
+│   └── wallet/             # Client SDK
+├── database/migrations/    # Database migrations
+└── docs/                   # API documentation
 ```
 
 
@@ -138,7 +136,7 @@ make doc-lint               # Lint API documentation
 ### Create a Wallet
 
 ```bash
-curl -X POST http://localhost:8080/wallets \
+curl -X POST http://localhost:8080/api/v1/wallets \
   -H "Content-Type: application/json" \
   -d '{
     "owner_id": "user-123",
@@ -149,7 +147,7 @@ curl -X POST http://localhost:8080/wallets \
 ### Create a Transaction
 
 ```bash
-curl -X POST http://localhost:8080/transactions \
+curl -X POST http://localhost:8080/api/v1/transactions \
   -H "Content-Type: application/json" \
   -d '{
     "wallet_id": "wallet-123",
