@@ -43,7 +43,7 @@ func New(walletSvc walletService) *Controller {
 // @Failure      404  {object}  apierror.Error
 // @Failure      422  {object}  apierror.Error
 // @Failure      500  {object}  apierror.Error
-// @Router       /wallets/{id} [get]
+// @Router       /v1/wallets/{id} [get]
 func (c *Controller) GetWalletByID(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {
@@ -79,7 +79,7 @@ func (c *Controller) GetWalletByID(ctx *gin.Context) {
 // @Failure      404    {object}  apierror.Error
 // @Failure      422    {object}  apierror.Error
 // @Failure      500    {object}  apierror.Error
-// @Router       /wallets/{id}/status [patch]
+// @Router       /v1/wallets/{id}/status [patch]
 func (c *Controller) UpdateWalletStatus(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {
@@ -119,7 +119,7 @@ func (c *Controller) UpdateWalletStatus(ctx *gin.Context) {
 // @Success      200    {object}  wallet.WalletsResponse
 // @Failure      400    {object}  apierror.Error
 // @Failure      500    {object}  apierror.Error
-// @Router       /wallets [get]
+// @Router       /v1/wallets [get]
 func (c *Controller) ListWallets(ctx *gin.Context) {
 	var query wallet.ListWalletsRequest
 	if err := ctx.ShouldBindQuery(&query); err != nil {
@@ -156,7 +156,7 @@ func (c *Controller) ListWallets(ctx *gin.Context) {
 // @Failure      400    {object}  apierror.Error
 // @Failure      422    {object}  apierror.Error
 // @Failure      500    {object}  apierror.Error
-// @Router       /wallets [post]
+// @Router       /v1/wallets [post]
 func (c *Controller) CreateWallet(ctx *gin.Context) {
 	var req wallet.CreateWalletRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -191,7 +191,7 @@ func (c *Controller) CreateWallet(ctx *gin.Context) {
 // @Failure      404  {object}  apierror.Error
 // @Failure      422  {object}	apierror.Error
 // @Failure      500  {object}  apierror.Error
-// @Router       /wallets/{id}/balance [get]
+// @Router       /v1/wallets/{id}/balance [get]
 func (c *Controller) GetWalletWithBalance(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {

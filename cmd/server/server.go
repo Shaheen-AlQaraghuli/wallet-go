@@ -17,6 +17,12 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+
+	ginSwagger "github.com/swaggo/gin-swagger"
+  swaggerFiles "github.com/swaggo/files"
+
+  _ "github.com/Shaheen-AlQaraghuli/wallet-go/docs"
+
 )
 
 
@@ -110,9 +116,14 @@ func setupRouter(cfg *config.AppConfig) *gin.Engine {
 }
 
 func setupRoutes(db *gorm.DB, cache *cache.Cache, router *gin.Engine) {
+	addSwaggerRoutes(router)
 	grp := router.Group("api/v1")
 	{
 		addWalletRoutes(db, cache, grp)
 		addTransactionRoutes(db, cache, grp)
 	}
+}
+
+func  addSwaggerRoutes(router *gin.Engine) {
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }

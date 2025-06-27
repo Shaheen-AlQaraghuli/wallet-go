@@ -1,0 +1,614 @@
+basePath: /api/
+definitions:
+  github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error:
+    properties:
+      errors:
+        items:
+          $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.ValidationError'
+        type: array
+      message:
+        type: string
+    type: object
+  github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.ValidationError:
+    properties:
+      message:
+        type: string
+      source:
+        type: string
+    type: object
+  github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_pagination.Pagination:
+    properties:
+      count:
+        type: integer
+      page:
+        type: integer
+      per_page:
+        type: integer
+      total:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.Currency:
+    enum:
+    - USD
+    - EUR
+    - GBP
+    - AED
+    - BHD
+    - SAR
+    type: string
+    x-enum-varnames:
+    - CurrencyUSD
+    - CurrencyEUR
+    - CurrencyGBP
+    - CurrencyAED
+    - CurrencyBHD
+    - CurrencySAR
+  github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.TransactionStatus:
+    enum:
+    - pending
+    - completed
+    - failed
+    type: string
+    x-enum-varnames:
+    - TransactionStatusPending
+    - TransactionStatusCompleted
+    - TransactionStatusFailed
+  github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.TransactionType:
+    enum:
+    - credit
+    - debit
+    type: string
+    x-enum-varnames:
+    - TransactionTypeCredit
+    - TransactionTypeDebit
+  github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.WalletStatus:
+    enum:
+    - active
+    - inactive
+    - frozen
+    type: string
+    x-enum-varnames:
+    - WalletStatusActive
+    - WalletStatusInactive
+    - WalletStatusFrozen
+  github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.CreateTransactionRequest:
+    properties:
+      amount:
+        description: Amount to be added or deducted from the wallet.
+        type: integer
+      idempotency_key:
+        description: Idempotency key for the transaction.
+        type: string
+      note:
+        description: Note for the transaction.
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.TransactionType'
+        description: Type of transaction.
+      wallet_id:
+        description: Unique identifier for the wallet.
+        type: string
+    required:
+    - amount
+    - idempotency_key
+    - type
+    - wallet_id
+    type: object
+  github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.CreateWalletRequest:
+    properties:
+      currency:
+        allOf:
+        - $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.Currency'
+        description: Currency of the wallet.
+      owner_id:
+        description: Unique identifier for the wallet owner.
+        type: string
+    required:
+    - currency
+    - owner_id
+    type: object
+  github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Metadata:
+    properties:
+      pagination:
+        $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_pagination.Pagination'
+    type: object
+  github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Transaction:
+    properties:
+      amount:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: string
+      note:
+        type: string
+      status:
+        $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.TransactionStatus'
+      type:
+        $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.TransactionType'
+      updated_at:
+        type: string
+      wallet_id:
+        type: string
+    type: object
+  github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.TransactionResponse:
+    properties:
+      transaction:
+        $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Transaction'
+    type: object
+  github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.TransactionsResponse:
+    properties:
+      metadata:
+        $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Metadata'
+      transactions:
+        items:
+          $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Transaction'
+        type: array
+    type: object
+  github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Wallet:
+    properties:
+      balance:
+        type: integer
+      created_at:
+        type: string
+      currency:
+        $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.Currency'
+      id:
+        type: string
+      owner_id:
+        type: string
+      status:
+        $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.WalletStatus'
+      updated_at:
+        type: string
+    type: object
+  github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletResponse:
+    properties:
+      wallet:
+        $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Wallet'
+    type: object
+  github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletsResponse:
+    properties:
+      metadata:
+        $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Metadata'
+      wallets:
+        items:
+          $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Wallet'
+        type: array
+    type: object
+info:
+  contact:
+    name: Wallet Service Owners
+  description: Wallet Service Documentation.
+  title: Wallet Service API.
+  version: "1.0"
+paths:
+  /v1/transactions:
+    get:
+      consumes:
+      - application/json
+      description: List transactions with pagination
+      operationId: listTransactions
+      parameters:
+      - description: CreatedAtFrom is the start date for filtering transactions.
+        in: query
+        name: created_at_from
+        type: string
+      - description: CreatedAtTo is the end date for filtering transactions.
+        in: query
+        name: created_at_to
+        type: string
+      - collectionFormat: csv
+        description: IDs of the transactions to filter.
+        in: query
+        items:
+          type: string
+        name: ids
+        type: array
+      - description: Page is the current page number, starting from 1.
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: PerPage is the number of items per page, with a maximum of 100.
+        in: query
+        maximum: 100
+        minimum: 1
+        name: per_page
+        type: integer
+      - collectionFormat: csv
+        description: Statuses of the transactions to filter.
+        in: query
+        items:
+          enum:
+          - pending
+          - completed
+          - failed
+          type: string
+        name: statuses
+        type: array
+      - collectionFormat: csv
+        description: Types of the transactions to filter.
+        in: query
+        items:
+          enum:
+          - credit
+          - debit
+          type: string
+        name: types
+        type: array
+      - collectionFormat: csv
+        description: Wallet IDs to filter.
+        in: query
+        items:
+          type: string
+        name: wallet_ids
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.TransactionsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+      summary: List transactions
+      tags:
+      - transactions
+    post:
+      consumes:
+      - application/json
+      description: Create a new transaction
+      operationId: createTransaction
+      parameters:
+      - description: Transaction data
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.CreateTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+      summary: Create transaction
+      tags:
+      - transactions
+  /v1/transactions/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get transaction by ID
+      operationId: getTransactionByID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+      summary: Get transaction by ID
+      tags:
+      - transactions
+  /v1/transactions/{id}/status:
+    put:
+      consumes:
+      - application/json
+      description: Update the status of a transaction
+      operationId: updateTransactionStatus
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: New status for the transaction
+        in: body
+        name: status
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+      summary: Update transaction status
+      tags:
+      - transactions
+  /v1/wallets:
+    get:
+      consumes:
+      - application/json
+      description: List wallets with pagination
+      operationId: listWallets
+      parameters:
+      - collectionFormat: csv
+        description: Currencies to filter.
+        in: query
+        items:
+          enum:
+          - USD
+          - EUR
+          - GBP
+          - AED
+          - BHD
+          - SAR
+          type: string
+        name: currencies
+        type: array
+      - collectionFormat: csv
+        description: IDs of the wallets to filter.
+        in: query
+        items:
+          type: string
+        name: ids
+        type: array
+      - collectionFormat: csv
+        description: Owner IDs to filter.
+        in: query
+        items:
+          type: string
+        name: owner_ids
+        type: array
+      - description: Page is the current page number, starting from 1.
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: PerPage is the number of items per page, with a maximum of 100.
+        in: query
+        maximum: 100
+        minimum: 1
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+      summary: List wallets
+      tags:
+      - wallets
+    post:
+      consumes:
+      - application/json
+      description: Create a new wallet with initial balance
+      operationId: createWallet
+      parameters:
+      - description: Wallet data
+        in: body
+        name: wallet
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.CreateWalletRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+      summary: Create a new wallet
+      tags:
+      - wallets
+  /v1/wallets/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get wallet by ID
+      operationId: getWalletByID
+      parameters:
+      - description: Wallet ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+      summary: Get wallet by ID
+      tags:
+      - wallets
+  /v1/wallets/{id}/balance:
+    get:
+      consumes:
+      - application/json
+      description: Get wallet with balance by ID
+      operationId: getWalletWithBalance
+      parameters:
+      - description: Wallet ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+      summary: Get wallet with balance
+      tags:
+      - wallets
+  /v1/wallets/{id}/status:
+    patch:
+      consumes:
+      - application/json
+      description: Update wallet status
+      operationId: updateWalletStatus
+      parameters:
+      - description: Wallet ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: New wallet status
+        in: body
+        name: status
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error'
+      summary: Update wallet status
+      tags:
+      - wallets
+swagger: "2.0"

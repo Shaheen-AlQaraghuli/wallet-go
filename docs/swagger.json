@@ -1,0 +1,908 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Wallet Service Documentation.",
+        "title": "Wallet Service API.",
+        "contact": {
+            "name": "Wallet Service Owners"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/api/",
+    "paths": {
+        "/v1/transactions": {
+            "get": {
+                "description": "List transactions with pagination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "List transactions",
+                "operationId": "listTransactions",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CreatedAtFrom is the start date for filtering transactions.",
+                        "name": "created_at_from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "CreatedAtTo is the end date for filtering transactions.",
+                        "name": "created_at_to",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "IDs of the transactions to filter.",
+                        "name": "ids",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Page is the current page number, starting from 1.",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "PerPage is the number of items per page, with a maximum of 100.",
+                        "name": "per_page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "enum": [
+                                "pending",
+                                "completed",
+                                "failed"
+                            ],
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Statuses of the transactions to filter.",
+                        "name": "statuses",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "enum": [
+                                "credit",
+                                "debit"
+                            ],
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Types of the transactions to filter.",
+                        "name": "types",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Wallet IDs to filter.",
+                        "name": "wallet_ids",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.TransactionsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "Create transaction",
+                "operationId": "createTransaction",
+                "parameters": [
+                    {
+                        "description": "Transaction data",
+                        "name": "transaction",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.CreateTransactionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.TransactionResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/transactions/{id}": {
+            "get": {
+                "description": "Get transaction by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "Get transaction by ID",
+                "operationId": "getTransactionByID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Transaction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.TransactionResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/transactions/{id}/status": {
+            "put": {
+                "description": "Update the status of a transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "Update transaction status",
+                "operationId": "updateTransactionStatus",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Transaction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New status for the transaction",
+                        "name": "status",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.TransactionResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/wallets": {
+            "get": {
+                "description": "List wallets with pagination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "wallets"
+                ],
+                "summary": "List wallets",
+                "operationId": "listWallets",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "enum": [
+                                "USD",
+                                "EUR",
+                                "GBP",
+                                "AED",
+                                "BHD",
+                                "SAR"
+                            ],
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Currencies to filter.",
+                        "name": "currencies",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "IDs of the wallets to filter.",
+                        "name": "ids",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Owner IDs to filter.",
+                        "name": "owner_ids",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Page is the current page number, starting from 1.",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "PerPage is the number of items per page, with a maximum of 100.",
+                        "name": "per_page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new wallet with initial balance",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "wallets"
+                ],
+                "summary": "Create a new wallet",
+                "operationId": "createWallet",
+                "parameters": [
+                    {
+                        "description": "Wallet data",
+                        "name": "wallet",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.CreateWalletRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/wallets/{id}": {
+            "get": {
+                "description": "Get wallet by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "wallets"
+                ],
+                "summary": "Get wallet by ID",
+                "operationId": "getWalletByID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Wallet ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/wallets/{id}/balance": {
+            "get": {
+                "description": "Get wallet with balance by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "wallets"
+                ],
+                "summary": "Get wallet with balance",
+                "operationId": "getWalletWithBalance",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Wallet ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/wallets/{id}/status": {
+            "patch": {
+                "description": "Update wallet status",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "wallets"
+                ],
+                "summary": "Update wallet status",
+                "operationId": "updateWalletStatus",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Wallet ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New wallet status",
+                        "name": "status",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.Error": {
+            "type": "object",
+            "properties": {
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.ValidationError"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_http_apierror.ValidationError": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_pagination.Pagination": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "per_page": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "total_pages": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.Currency": {
+            "type": "string",
+            "enum": [
+                "USD",
+                "EUR",
+                "GBP",
+                "AED",
+                "BHD",
+                "SAR"
+            ],
+            "x-enum-varnames": [
+                "CurrencyUSD",
+                "CurrencyEUR",
+                "CurrencyGBP",
+                "CurrencyAED",
+                "CurrencyBHD",
+                "CurrencySAR"
+            ]
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.TransactionStatus": {
+            "type": "string",
+            "enum": [
+                "pending",
+                "completed",
+                "failed"
+            ],
+            "x-enum-varnames": [
+                "TransactionStatusPending",
+                "TransactionStatusCompleted",
+                "TransactionStatusFailed"
+            ]
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.TransactionType": {
+            "type": "string",
+            "enum": [
+                "credit",
+                "debit"
+            ],
+            "x-enum-varnames": [
+                "TransactionTypeCredit",
+                "TransactionTypeDebit"
+            ]
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.WalletStatus": {
+            "type": "string",
+            "enum": [
+                "active",
+                "inactive",
+                "frozen"
+            ],
+            "x-enum-varnames": [
+                "WalletStatusActive",
+                "WalletStatusInactive",
+                "WalletStatusFrozen"
+            ]
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.CreateTransactionRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "idempotency_key",
+                "type",
+                "wallet_id"
+            ],
+            "properties": {
+                "amount": {
+                    "description": "Amount to be added or deducted from the wallet.",
+                    "type": "integer"
+                },
+                "idempotency_key": {
+                    "description": "Idempotency key for the transaction.",
+                    "type": "string"
+                },
+                "note": {
+                    "description": "Note for the transaction.",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Type of transaction.",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.TransactionType"
+                        }
+                    ]
+                },
+                "wallet_id": {
+                    "description": "Unique identifier for the wallet.",
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.CreateWalletRequest": {
+            "type": "object",
+            "required": [
+                "currency",
+                "owner_id"
+            ],
+            "properties": {
+                "currency": {
+                    "description": "Currency of the wallet.",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.Currency"
+                        }
+                    ]
+                },
+                "owner_id": {
+                    "description": "Unique identifier for the wallet owner.",
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Metadata": {
+            "type": "object",
+            "properties": {
+                "pagination": {
+                    "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_internal_util_pagination.Pagination"
+                }
+            }
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Transaction": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.TransactionStatus"
+                },
+                "type": {
+                    "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.TransactionType"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "wallet_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.TransactionResponse": {
+            "type": "object",
+            "properties": {
+                "transaction": {
+                    "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Transaction"
+                }
+            }
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.TransactionsResponse": {
+            "type": "object",
+            "properties": {
+                "metadata": {
+                    "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Metadata"
+                },
+                "transactions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Transaction"
+                    }
+                }
+            }
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Wallet": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "currency": {
+                    "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.Currency"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "owner_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_types.WalletStatus"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletResponse": {
+            "type": "object",
+            "properties": {
+                "wallet": {
+                    "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Wallet"
+                }
+            }
+        },
+        "github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.WalletsResponse": {
+            "type": "object",
+            "properties": {
+                "metadata": {
+                    "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Metadata"
+                },
+                "wallets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Shaheen-AlQaraghuli_wallet-go_pkg_wallet.Wallet"
+                    }
+                }
+            }
+        }
+    }
+}

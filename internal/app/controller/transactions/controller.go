@@ -44,7 +44,7 @@ func New(transactionSvc transactionService) *Controller {
 // @Failure      404  {object}  apierror.Error
 // @Failure      422  {object}  apierror.Error
 // @Failure      500  {object}  apierror.Error
-// @Router       /transactions/{id} [get]
+// @Router       /v1/transactions/{id} [get]
 func (c *Controller) GetTransactionByID(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {
@@ -80,7 +80,7 @@ func (c *Controller) GetTransactionByID(ctx *gin.Context) {
 // @Failure      404    {object}  apierror.Error
 // @Failure      422    {object}  apierror.Error
 // @Failure      500    {object}  apierror.Error
-// @Router       /transactions/{id}/status [put]
+// @Router       /v1/transactions/{id}/status [put]
 func (c *Controller) UpdateTransactionStatus(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {
@@ -122,7 +122,7 @@ func (c *Controller) UpdateTransactionStatus(ctx *gin.Context) {
 // @Failure      404    {object}  apierror.Error
 // @Failure      422    {object}  apierror.Error
 // @Failure      500    {object}  apierror.Error
-// @Router       /transactions [get]
+// @Router       /v1/transactions [get]
 func (c *Controller) ListTransactions(ctx *gin.Context) {
 	var req wallet.ListTransactionsRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {
@@ -161,7 +161,7 @@ func (c *Controller) ListTransactions(ctx *gin.Context) {
 // @Failure      404    {object}  apierror.Error
 // @Failure      422    {object}  apierror.Error
 // @Failure      500    {object}  apierror.Error
-// @Router       /transactions [post]
+// @Router       /v1/transactions [post]
 func (c *Controller) CreateTransaction(ctx *gin.Context) {
 	var req wallet.CreateTransactionRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
